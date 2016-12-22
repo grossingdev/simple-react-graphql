@@ -1,0 +1,142 @@
+input loginInput {
+  id: String!
+  name: String!
+  email: String!
+  verified: Boolean
+  isAdmin: Boolean
+  photo: String!
+  facebookToken: String
+  googleToken: String
+  clientMutationId: String
+}
+
+type loginPayload {
+  user: User
+  accessToken: String
+  clientMutationId: String
+}
+
+type Mutation {
+  signup(input: signupInput!): signupPayload
+  login(input: loginInput!): loginPayload
+}
+
+# An object with an ID
+interface Node {
+  # The id of the object.
+  id: ID!
+}
+
+# Information about pagination in a connection.
+type PageInfo {
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean!
+
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean!
+
+  # When paginating backwards, the cursor to continue.
+  startCursor: String
+
+  # When paginating forwards, the cursor to continue.
+  endCursor: String
+}
+
+type Query {
+  # Fetches an object given its ID
+  node(
+    # The ID of an object
+    id: ID!
+  ): Node
+
+  # Viewer query
+  viewer: ViewerType
+}
+
+input signupInput {
+  id: String!
+  name: String!
+  email: String!
+  verified: Boolean
+  isAdmin: Boolean
+  photo: String!
+  clientMutationId: String
+}
+
+type signupPayload {
+  user: User
+  accessToken: String
+  clientMutationId: String
+}
+
+# A person who uses our app
+type User implements Node {
+  # The ID of an object
+  id: ID!
+
+  # user email
+  email: String
+
+  # user name
+  name: String
+
+  # status for verified user
+  verified: Boolean
+
+  # admin status for user
+  isAdmin: Boolean
+
+  # user photo url path
+  photo: String
+}
+
+# A person who uses our app
+type Video implements Node {
+  # The ID of an object
+  id: ID!
+
+  # video title
+  title: String
+
+  # video description
+  description: String
+
+  # Video width
+  width: Int
+
+  # Video height
+  height: Int
+
+  # Video thumb photo url path
+  thumbnail: String
+
+  # Video url path
+  embed: String
+}
+
+# A connection to a list of items.
+type VideoConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [VideoEdge]
+}
+
+# An edge in a connection.
+type VideoEdge {
+  # The item at the end of the edge
+  node: Video
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# A viewer object
+type ViewerType {
+  # Get User information
+  user(id: String): User
+
+  # Get Videos information
+  videos(after: String, first: Int, before: String, last: Int): VideoConnection
+}
